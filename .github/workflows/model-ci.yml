@@ -1,0 +1,44 @@
+name: ML Model Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  churn-model-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Train Model
+      run: |
+        python scripts/train_model.py
+
+    - name: Evaluate Model Accuracy (≥ 70%)
+      run: |
+        python scripts/evaluate_model.py
+
+    - name: Check Model File Size (≤ 20 MB)
+      run: |
+        MODEL_PATH="models/churn_model.pkl"
+        MAX_SIZE_MB=20
+        ACTUAL_SIZE_MB=$(du -m "$MODEL_PATH" | cut -f1)
+        echo "Model file size: ${ACTUAL_SIZE_MB} MB"
+        if [ "$ACTUAL_SIZE_MB" -gt "$MAX_SIZE_MB" ]; then
+          echo "❌ Model file too large!"
+          exit 1
+        else
+          echo "✅ Model size within limit."
+        fi
