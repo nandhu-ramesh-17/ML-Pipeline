@@ -27,7 +27,7 @@ jobs:
         python scripts/train_model.py
 
     - name: Upload Trained Model as Artifact 
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: churn_model
         path: models/churn_model.pkl
