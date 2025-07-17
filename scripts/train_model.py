@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 
 # Load Data
-df = pd.read_csv('data/Telco-Customer-Churn.csv')
+df = pd.read_csv('data/customer_data.csv')
 
 # Preprocessing
 df.drop(['customerID'], axis=1, inplace=True)
